@@ -18,22 +18,20 @@
     2. Switch between toolchains using `rustup default <toolchain>`
     3. Package management is contained within cargo crates+workspaces with the global cache @ ~/.cargo. Sweet.
 *** python
-    1. Sigh. This is going to be a journey. Actually, not anymore - shoutout to the OG @BurntSushi for fixing this problem.
-    2. Install `uv`(https://docs.astral.sh/uv/)  - an efficient python package and project mgr written in Rust.
+    1. Install `uv`(https://docs.astral.sh/uv/)  - an efficient python package and project mgr written in Rust.
        #+BEGIN_SRC bash
        > curl -LsSf https://astral.sh/uv/install.sh | sh
        > uv python install latest
        > uv tool install ruff@latest # ruff is a linter, and it's fine to install it globally.
+       > uv tool install 'python-lsp-server[all]' # provides intellisense capabilities 
        #+END_SRC
-    3. Bootstrapping a new python project involves:
+    2. Bootstrapping a new python project involves:
        #+BEGIN_SRC bash
        > uv init --python <python-version> my-python-project
        > uv add dependency
-       > uv tool install 'python-lsp-server[all]'
        #+END_SRC
-       __Note: I don't like that I need to install python-lsp-server in each project. Thankfully, uv uses a global cache so I don't think
-       it ever needs to re-download packages across projects using the same python version(TBC).__
        **tl;dr - every command needs to be run through uv**
+    3. init.el contains necessary hooks(through pet.el) to resolve python environment.
 *** java
     TODO
 *** node/typescript
