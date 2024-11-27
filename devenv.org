@@ -1,0 +1,66 @@
+* Guidance for bootstrapping a dev machine
+** Core utilities
+1. oh-my-zsh. (optional)antigen for plugin mgmt.
+2. gh cli - super convenient and also a dependency for emacs-forge.
+3. ripgrep(rg) - ergonomic grepper written in Rust.
+4. fzf - fuzzy finder (C-r / C-t)
+
+** Language Environments
+*** go
+    1. Use goenv(https://github.com/go-nv/goenv) to install and manage multiple go installations.
+       Shims for the linter(gofmt) will be automatically setup.
+    2. Install gopls for LSP support.
+       #+BEGIN_SRC bash
+       > go install -v golang.org/x/tools/gopls@latest
+       #+END_SRC
+*** rust
+    1. Use rustup. Easy peasy.
+    2. Switch between toolchains using `rustup default <toolchain>`
+    3. Package management is contained within cargo crates+workspaces with the global cache @ ~/.cargo. Sweet.
+*** python
+    1. Sigh. This is going to be a journey. Actually, not anymore - shoutout to the OG @BurntSushi for fixing this problem.
+    2. Install `uv`(https://docs.astral.sh/uv/)  - an efficient python package and project mgr written in Rust.
+       #+BEGIN_SRC bash
+       > curl -LsSf https://astral.sh/uv/install.sh | sh
+       > uv python install latest
+       > uv tool install ruff@latest # ruff is a linter, and it's fine to install it globally.
+       #+END_SRC
+    3. Bootstrapping a new python project involves:
+       #+BEGIN_SRC bash
+       > uv init --python <python-version> my-python-project
+       > uv add dependency
+       > uv tool install 'python-lsp-server[all]'
+       #+END_SRC
+       __Note: I don't like that I need to install python-lsp-server in each project. Thankfully, uv uses a global cache so I don't think
+       it ever needs to re-download packages across projects using the same python version(TBC).__
+       **tl;dr - every command needs to be run through uv**
+*** java
+    TODO
+*** node/typescript
+    TODO
+
+** Editor
+*** Vscode
+    1. Login to your Github account and turn on account sync. All settings should propagate. 
+       OR
+    1. Configure dedicated profiles. Avoid installing all extensions into the Default profile, slows down startup and makes the interface noisy.
+    2. Minimize ui elements explicitly from "View > Appearance >"
+
+*** Emacs
+    1. Clone my emacs config.
+    #+BEGIN_SRC: 
+    gh repo clone vishalg0wda/my-emacs-config ~/code
+    ln -sf ~/code/my-emacs-config/init.el ~/.emacs.d/
+    #+END_SRC
+    At the time of writing(27 Nov 2024), GNU ELPA public keys have expired failing signature checks when downloading package archives.
+    I had to momentarily disable signature checks and install this package(https://elpa.gnu.org/packages/gnu-elpa-keyring-update.html)
+    to workaround it.
+
+    #+BEGIN_SRC elisp
+    M-: (setq package-check-signature nil) RET
+    M-x package-install RET gnu-elpa-keyring-update RET
+    M-: (setq package-check-signature 'allow-unsigned) RET ; reset it 
+    #+END_SRC
+    
+    The objective with this configuration has been to achieve a minimal UI, low resource strain, and yet have sufficient functionality for programming.
+    
